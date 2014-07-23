@@ -10,8 +10,7 @@ var authCreds = {
 var express = require('express'),
     app = express(),
     http = require('http').Server(app),
-    io = require('socket.io')(http),
-    uid = require('rand-token').uid;
+    io = require('socket.io')(http);
 
 // setup basic auth
 var auth = require('http-auth');
