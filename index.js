@@ -1,3 +1,11 @@
+var auth = require('http-auth');
+var basic = auth.basic({
+        realm: "Snapshot"
+    }, function (username, password, callback) { // Custom authentication method.
+        callback(username === "snap" && password === "naphot");
+    }
+);
+
 var express = require('express'),
     app = express(),
     http = require('http').Server(app),
@@ -6,6 +14,7 @@ var express = require('express'),
 
 var port = Number(process.env.PORT || 4444);
 
+app.use(auth.connect(basic));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
