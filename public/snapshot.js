@@ -1,76 +1,133 @@
-var socket = io();
-socket.on('updateSnapshot', updateSnapshot);
+var snapShot = {};
+(function() {
+  var self = this;
 
-socket.on('removeSnapshot', function(pkg){
-  $('#' + pkg.token).remove();
-  console.log(pkg.token, 'removed');
-});
+  // prepare local image object
+  var package = {
+    token: '',
+    name: localStorage.name || prompt('Please enter your name'),
+    uri: ''
+  };
 
-var token;
-socket.on('token', function (tkn) {
-  token = tkn;
-});
+  // save name
+  localStorage.name = package.name;
+
+  // prep video elements
+  var video = document.createElement('video');
+  video.autoplay = true;
+
+  // prepare canvas
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = (canvas.width/1.333333333333);
 
 
-function updateSnapshot(pkg) {
-  var el = '#' + pkg.token;
-  if (!$(el).length) {
-    var img = $('<img/>');
-    var p = $('<p>').html(pkg.token);
-    var div = $('<div>').attr('id', pkg.token);
-    $(div).append(img, p);
-    $('#shots').append(div);
-  }
-  $(el).find('img').attr('src', pkg.uri);
-}
 
-var video = document.querySelector("#videoElement");
+  // check for getUserMedia support
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
-// check for getUserMedia support
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-
-if (navigator.getUserMedia) {
+  // initiate video stream
+  if (navigator.getUserMedia) {
     // get webcam feed if available
-    navigator.getUserMedia({video: true}, handleVideo, videoError);
-}
+    navigator.getUserMedia({video: true}, function (stream) {
+      // if found attach feed to video element
+      video.src = window.URL.createObjectURL(stream);
+    }, function (error) {
+      console.error('video failed to load:', error);
+    });
+  }
 
-function handleVideo(stream) {
-    // if found attach feed to video element
-    video.src = window.URL.createObjectURL(stream);
-}
+  // draw image from canvas
+  this.drawImage = function () {
+    // if no video, exit here
+    if(video.paused || video.ended) return false;
 
-function videoError(e) {
-    // no webcam found - do something
-}
-var v,canvas,context,w,h;
-var imgtag = document.getElementById('imgtag'); // get reference to img tag
-var sel = document.getElementById('fileselect'); // get reference to file select input element
+    // draw video feed to canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-document.addEventListener('DOMContentLoaded', function(){
-    // when DOM loaded, get canvas 2D context and store width and height of element
-    v = document.getElementById('videoElement');
-    canvas = document.getElementById('canvas');
-    context = canvas.getContext('2d');
-    w = canvas.width;
-    h = canvas.height;
+    // convert canvas to data URI
+    return canvas.toDataURL("image/jpeg");
+  };
 
-},false);
+  // remove snapshot
+  this.remove = function (pkg) {
+    $('#' + pkg.token).remove();
+  };
 
-function draw(v,c,w,h) {
+  // update snapshot
+  this.update = function (pkg) {
+    var id = '#' + pkg.token;
+    if (!$(id).length) {
+      var img = $('<img/>');
 
-    if(v.paused || v.ended) return false; // if no video, exit here
+      // make name changeable if rendering local snapshot
+      var name;
+      if (pkg.token === package.token) {
+        name = $('<a>').addClass('name').attr({'href': '#', 'title': 'Change name.'}).text(pkg.name);
+        name.on('click', self.updateName);
+      } else {
+        name = $('<p>').addClass('name').html(pkg.name);
+      }
 
-    context.drawImage(v,0,0,w,h); // draw video feed to canvas
+      var div = $('<div>').attr('id', pkg.token).addClass('snapshot');
+      $(div).append(img, name);
 
-   var uri = canvas.toDataURL("image/png"); // convert canvas to data URI
+      if (pkg.token === package.token) {
+        $(div).addClass('self').attr('title', 'Update snapshot now.');
+        $(div).on('click', self.send);
+        $('#shots').prepend(div);
+      } else {
+        $('#shots').append(div);
+      }
+    }
+    $(id).find('img').attr('src', pkg.uri);
+    $(id).find('.name').text(pkg.name);
+    // $(id).find('.time').html((new Date()).toTimeString().split(' ')[0]);
+  };
 
-   // console.log(uri); // uncomment line to log URI for testing
-   var pkg = { uri: uri, token: token};
-   socket.emit('newSnapshot', pkg);
-   updateSnapshot(pkg);
+  // update name click binding
+  this.updateName = function (event) {
+    event.preventDefault();
+    var name = localStorage.name;
+    var newName = prompt('Please enter a name', name);
+    if (newName && newName !== name) {
+      package.name = newName;
+      localStorage.name = newName;
+      self.send();
+    }
+  };
 
-}
+  // send snapshot
+  this.send = function () {
+    var datauri = self.drawImage();
+    if (datauri) {
+      package.uri = datauri;
+      socket.emit('newSnapshot', package);
+      self.update(package);
+    }
+  };
 
-setInterval(function () {
-  draw(v,context,w,h);
-}, (5000));
+  // set local snapshot token
+  this.setToken = function (token) {
+    package.token = token;
+
+    // on video load send first snapshot
+    video.onplay = function () {
+      setTimeout(self.send, 1000);
+    };
+
+  };
+
+}).apply(snapShot);
+
+var socket = io();
+
+socket.on('token', snapShot.setToken);
+
+socket.on('getSnapshot', snapShot.send);
+
+socket.on('updateSnapshot', snapShot.update);
+
+socket.on('removeSnapshot', snapShot.remove);
+

@@ -1,12 +1,40 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font: 13px Helvetica, Arial; }
+body { font: 12px Helvetica, Arial; margin: 1em; }
 
 #snapper { display: none; }
 
-#shots img {
-  max-width: 200px;
+img {
+  max-width: 100%;
   height: auto;
   -webkit-filter: grayscale(100%);
   -o-filter: grayscale(100%);
   filter: grayscale(100%);
+}
+
+.snapshot {
+  position: relative;
+  width: 300px;
+  float: left;
+  margin: 2px;
+}
+.snapshot.self {
+  cursor: pointer;
+}
+.snapshot.self a {
+  color: #fff;
+}
+.name, .time {
+  margin: 0;
+  position: absolute;
+  bottom: 1em;
+  z-index: 1;
+  color: #fff;
+  text-shadow: 0 0 5px #000;
+}
+
+.name {
+  left: 1em;
+}
+.time {
+  right: 1em;
 }
