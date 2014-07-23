@@ -131,3 +131,12 @@ socket.on('updateSnapshot', snapShot.update);
 
 socket.on('removeSnapshot', snapShot.remove);
 
+// keyboard shortcuts
+$(document).on('keyup', function (event) {
+  var key = {
+    'space': 32,
+    'n': 78
+  };
+  if (event.keyCode == key.space) { snapShot.send(); }
+  if (event.keyCode == key.n) { snapShot.updateName(event); }
+});
