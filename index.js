@@ -38,14 +38,20 @@ io.on('connection', function (socket){
   // send token to app
   socket.emit('token', socket.id);
 
-  // trigger new snapshot on interval
-  setInterval(function () {
-    socket.emit('getSnapshot');
-  }, interval);
-
-  // on newSnapshot broadcast to sockets
+  // on newSnapshot broadcast to sockets and setup interval
   socket.on('newSnapshot', function (pkg){
+
+    // broadcast snapshot update to other sockets
     socket.broadcast.emit('updateSnapshot', pkg);
+
+    // reset interval when snapshot is manually triggered
+    clearTimeout(socket.timeoutId);
+
+    // setup new timeout
+    socket.timeoutId = setTimeout(function () {
+      socket.emit('getSnapshot');
+    }, interval);
+
   });
 
   // on disconnect remove snapshots from connected sockets
