@@ -2,18 +2,17 @@
 <html>
   <head>
     <title>Snapshot</title>
-    <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
 
     <div id="shots"></div>
 
-    <img src="" id="imgtag" alt="">
-    <div id="snapper">
-        <video autoplay id="videoElement"></video>
-        <canvas id="canvas" width="500" height="375"></canvas>
+    <div class="footer">
+      <p class="text-muted"><strong>Snapshot.</strong> Keyboard shortcuts: n = change name. space = take new snapshot.</p>
     </div>
+
 
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/socket.io/socket.io.js"></script>
