@@ -1,7 +1,7 @@
 {
   "name": "snapshot",
   "version": "0.0.0",
-  "description": "",
+  "description": "Be remote and present.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
