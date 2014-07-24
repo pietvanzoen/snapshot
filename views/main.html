@@ -12,7 +12,18 @@
     <div class="footer">
       <p class="text-muted"><strong>Snapshot.</strong> Keyboard shortcuts: n = change name. space = take new snapshot.</p>
     </div>
+    <div id="placeholder-div"></div>
+<script type="text/javascript" src="https://apis.google.com/js/platform.js"></script>
+<script>
+  gapi.hangout.render('placeholder-div', {
 
+    'render': 'createhangout',
+    'invites' : "[{'id': 'dave@cozy.co','invite_type': 'EMAIL'}]",
+    'initial_apps': "[{'app_id' : '184219133185', 'start_data' : 'dQw4w9WgXcQ', 'app_type' : 'ROOM_APP' }]",
+    'widget_size': 72
+
+});
+</script>
 
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/socket.io/socket.io.js"></script>
