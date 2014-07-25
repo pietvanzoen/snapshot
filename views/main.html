@@ -10,6 +10,7 @@
 
     <section class="shots">
 
+
       <!-- ko if: me().img -->
       <div class="snapshot self" data-bind="with: me, click: shotHandler.send">
         <img data-bind="attr: { src: img }">
@@ -33,12 +34,11 @@
         <div class="navbar-header">
           <a class="navbar-brand" href="#">Snapshot</a>
         </div>
-        <form class="navbar-form navbar-left" role="search">
+        <div class="navbar-form navbar-left">
           <div class="form-group">
             <input type="text" class="form-control" id="name" placeholder="Set your name" data-bind="value: me().name">
           </div>
-          <a href="#" class="btn btn-default">Set Name</a>
-        </form>
+        </div>
         <p class="navbar-right navbar-text text-muted"><strong>Snapshot.</strong> Keyboard shortcuts: n = change name. space = take new snapshot.</p>
       </div>
     </nav>

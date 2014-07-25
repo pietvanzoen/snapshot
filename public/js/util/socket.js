@@ -6,7 +6,14 @@
  */
 define(['io'], function (io) {
 
-  console.log('socket connected');
-  return io.connect(location.origin);
+  return {
+    load: function (name, req, onLoad, config) {
+      var socket = io.connect(location.origin);
+      socket.on('welcome', function (id) {
+        socket.id = id;
+        onLoad(socket);
+      });
+    }
+  };
 
 });

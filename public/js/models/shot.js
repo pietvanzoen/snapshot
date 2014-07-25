@@ -8,9 +8,10 @@ define(
 [
   'lodash',
   'models/baseModel',
-  'util/socket',
+  'util/socket!',
+  'util/webrtc!'
 ],
-function (_, BaseModel, socket) {
+function (_, BaseModel, socket, webrtc) {
 
   /**
   * Model variables
@@ -22,6 +23,8 @@ function (_, BaseModel, socket) {
     this.name = options.name || '';
     this.img = options.img || '';
     this.me = options.me || false;
+    this.videoSrc = null;
+    this.videoActive = false;
 
     BaseModel.apply(this, arguments);
   };
@@ -39,6 +42,7 @@ function (_, BaseModel, socket) {
       }
 
       if (this.me()) {
+        this.videoSrc(webrtc.src);
         this.name.subscribe(function (newName) {
           localStorage.name = newName;
         });

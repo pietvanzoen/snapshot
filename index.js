@@ -35,20 +35,22 @@ app.get('/', function(req, res){
 
 // app.param('chatid', /^\d+$/);
 app.get('/chat/:chatid', function(req, res){
-  console.log(req.params.chatid);
+  // console.log(req.params.chatid);
   res.sendfile('views/chat.html');
-  console.log('test');
+  // console.log('test');
 });
 
 
+// console.log('ready');
 // socket
 io.on('connection', function (socket){
-
+  // console.log('new connection', socket.id);
   // send token to app
   socket.emit('welcome', socket.id);
 
   // on newSnapshot broadcast to sockets and setup interval
   socket.on('newSnapshot', function (pkg){
+    // console.log('new snapshot', socket.id);
 
     // broadcast snapshot update to other sockets
     socket.broadcast.emit('updateSnapshot', pkg);

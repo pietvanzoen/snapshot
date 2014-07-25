@@ -5,21 +5,19 @@
  * @description  The snapshot module.
  * @author  Piet
  */
-define(['lodash', 'ko'], function (_, ko) {
+define(['lodash', 'ko', 'util/webrtc!'], function (_, ko, webrtc) {
 
   /**
   * Module variables
   */
   var Snapshot = function (options) {
-    console.log('snapshot');
 
     this.imageFormat = 'image/jpeg';
 
     this.width = 300;
     this.height = (this.width/1.333333333333);
 
-    this.video = document.createElement('video');
-    this.video.autoplay = true;
+    this.video = webrtc.video;
     this.canvas = document.createElement('canvas');
     this.canvas.width = this.width;
     this.canvas.height = this.height;
@@ -36,30 +34,6 @@ define(['lodash', 'ko'], function (_, ko) {
   _.extend(Snapshot.prototype, {
 
     initialize: function () {
-
-      this.initVideo();
-
-    },
-
-    initVideo: function () {
-      var self = this;
-
-      // check for getUserMedia support
-      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-
-      // initiate video stream
-      if (navigator.getUserMedia) {
-        // get webcam feed if available
-        navigator.getUserMedia({video: true}, function (stream) {
-          // if found attach feed to video element
-          self.video.src = window.URL.createObjectURL(stream);
-          self.video.onplay = function (event) {
-            self.ready(true);
-          };
-        }, function (error) {
-          console.error('video failed to load:', error);
-        });
-      }
 
     },
 

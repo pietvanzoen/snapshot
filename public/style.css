@@ -5,9 +5,11 @@ body { font: 12px Helvetica, Arial; }
 
 #snapper { display: none; }
 
-img {
+img, video {
   max-width: 100%;
   height: auto;
+}
+img {
   -webkit-filter: grayscale(100%);
   -o-filter: grayscale(100%);
   filter: grayscale(100%);
@@ -29,6 +31,12 @@ img {
 }
 .snapshot.self a {
   color: #fff;
+}
+.snapshot video {
+  display: none;
+}
+.snapshot-video-active video {
+  display: block;
 }
 .name, .time {
   margin: 0;

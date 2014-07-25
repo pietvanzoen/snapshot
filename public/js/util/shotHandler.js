@@ -8,7 +8,7 @@ define(
 [
   'lodash',
   'ko',
-  'util/socket',
+  'util/socket!',
   'models/shot',
   'util/snapshot'
 ],
@@ -35,22 +35,12 @@ function (_, ko, socket, Shot, snapshot) {
 
       _.bindAll(this, 'update', 'send', 'remove');
 
-      ko.computed(function () {
-        var videoReady = snapshot.ready();
-        var tokenReady = this.me().id();
-        if (tokenReady && videoReady) {
-          setTimeout(function () {
-            self.send();
-          }, 1000);
-        }
-      }, this);
-
       // update me on name change
       this.me().name.subscribe(this.send);
 
-      socket.on('welcome', function (id) {
-        self.me().id(id);
-      });
+      setTimeout(function () {
+        self.send();
+      }, 1000);
 
       socket.on('getSnapshot', this.send);
 

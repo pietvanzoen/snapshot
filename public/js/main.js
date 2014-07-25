@@ -1,17 +1,18 @@
 define(
 [
+  'util/socket!',
   'lodash',
   'ko',
   'models/baseModel',
-  'util/socket',
   'util/shotHandler',
-  'models/shot'
+  'models/shot',
+  'util/snapshot'
 ],
-function(_, ko, BaseModel, socket, ShotHandler, Shot) {
+function(socket, _, ko, BaseModel, ShotHandler, Shot, snapshot) {
 
   var ViewModel = function () {
 
-    this.me = new Shot({me: true});
+    this.me = new Shot({me: true, id: socket.id});
     this.shots = [];
 
     BaseModel.apply(this, arguments);
