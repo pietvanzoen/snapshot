@@ -1,6 +1,7 @@
 // set variables
 var port = Number(process.env.PORT || 4444);
 var interval = (1000 * 3);
+var authCreds;
 // var authCreds = {
 //   username: 'snap',
 //   password: 'naphot'
