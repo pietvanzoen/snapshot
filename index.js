@@ -1,6 +1,6 @@
 // set variables
 var port = Number(process.env.PORT || 4444);
-var interval = (1000 * 10);
+var interval = (1000 * 3);
 var authCreds = {
   username: 'snap',
   password: 'naphot'
@@ -8,6 +8,7 @@ var authCreds = {
 
 // requires
 var express = require('express'),
+    params = require('express-params'),
     app = express(),
     http = require('http').Server(app),
     io = require('socket.io')(http);
@@ -20,22 +21,31 @@ var basic = auth.basic({
         callback(username === authCreds.username && password === authCreds.password);
     }
 );
+
 app.use(auth.connect(basic));
+params.extend(app);
 
 // serve public files
 app.use(express.static(__dirname + '/public'));
 
 // serve index file
 app.get('/', function(req, res){
-  res.sendfile('index.html');
+  res.sendfile('views/main.html');
 });
+
+// app.param('chatid', /^\d+$/);
+app.get('/chat/:chatid', function(req, res){
+  console.log(req.params.chatid);
+  res.sendfile('views/chat.html');
+  console.log('test');
+});
+
 
 // socket
 io.on('connection', function (socket){
-  socket.broadcast.emit('getSnapshot');
 
   // send token to app
-  socket.emit('token', socket.id);
+  socket.emit('welcome', socket.id);
 
   // on newSnapshot broadcast to sockets and setup interval
   socket.on('newSnapshot', function (pkg){
@@ -55,7 +65,7 @@ io.on('connection', function (socket){
 
   // on disconnect remove snapshots from connected sockets
   socket.on('disconnect', function () {
-    io.emit('removeSnapshot', {token: socket.id});
+    io.emit('removeSnapshot', socket.id);
   });
 });
 

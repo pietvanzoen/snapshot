@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.6.1",
+    "express-params": "0.0.3",
     "http-auth": "^2.1.8",
     "socket.io": "^1.0.6"
   },

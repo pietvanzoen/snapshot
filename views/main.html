@@ -7,26 +7,49 @@
   </head>
   <body>
 
-    <div id="shots"></div>
 
-    <div class="footer">
-      <p class="text-muted"><strong>Snapshot.</strong> Keyboard shortcuts: n = change name. space = take new snapshot.</p>
-    </div>
-    <div id="placeholder-div"></div>
-<script type="text/javascript" src="https://apis.google.com/js/platform.js"></script>
-<script>
-  gapi.hangout.render('placeholder-div', {
+    <section class="shots">
 
-    'render': 'createhangout',
-    'invites' : "[{'id': 'dave@cozy.co','invite_type': 'EMAIL'}]",
-    'initial_apps': "[{'app_id' : '184219133185', 'start_data' : 'dQw4w9WgXcQ', 'app_type' : 'ROOM_APP' }]",
-    'widget_size': 72
+      <!-- ko if: me().img -->
+      <div class="snapshot self" data-bind="with: me, click: shotHandler.send">
+        <img data-bind="attr: { src: img }">
+        <p class="name" data-bind="text: name"></p>
+      </div>
+      <!-- /ko -->
 
-});
-</script>
+      <!-- ko foreach: shots -->
+      <div class="snapshot">
+        <img data-bind="attr: { src: img }">
+        <p class="name" data-bind="text: name"></p>
+      </div>
+      <!-- /ko -->
 
-    <script src="//code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/snapshot.js"></script>
+    </section>
+
+
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Snapshot</a>
+        </div>
+        <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" id="name" placeholder="Set your name" data-bind="value: me().name">
+          </div>
+          <a href="#" class="btn btn-default">Set Name</a>
+        </form>
+        <p class="navbar-right navbar-text text-muted"><strong>Snapshot.</strong> Keyboard shortcuts: n = change name. space = take new snapshot.</p>
+      </div>
+    </nav>
+
+
+    <script src="/js/libs/require.js"></script>
+    <script>
+    require(['/js/requireConfig.js'], function () {
+      require(['main']);
+    });
+    </script>
+
   </body>
 </html>
