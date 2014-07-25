@@ -1,10 +1,10 @@
 // set variables
 var port = Number(process.env.PORT || 4444);
 var interval = (1000 * 3);
-var authCreds = {
-  username: 'snap',
-  password: 'naphot'
-};
+// var authCreds = {
+//   username: 'snap',
+//   password: 'naphot'
+// };
 
 // requires
 var express = require('express'),
@@ -14,15 +14,18 @@ var express = require('express'),
     io = require('socket.io')(http);
 
 // setup basic auth
-var auth = require('http-auth');
-var basic = auth.basic({
-        realm: "Snapshot"
-    }, function (username, password, callback) { // Custom authentication method.
-        callback(username === authCreds.username && password === authCreds.password);
-    }
-);
+if (authCreds) {
+  var auth = require('http-auth');
+  var basic = auth.basic({
+          realm: "Snapshot"
+      }, function (username, password, callback) { // Custom authentication method.
+          callback(username === authCreds.username && password === authCreds.password);
+      }
+  );
+  app.use(auth.connect(basic));
+}
 
-app.use(auth.connect(basic));
+// apply params express plugin
 params.extend(app);
 
 // serve public files
