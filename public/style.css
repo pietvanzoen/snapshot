@@ -9,11 +9,6 @@ img, video {
   max-width: 100%;
   height: auto;
 }
-img {
-  -webkit-filter: grayscale(100%);
-  -o-filter: grayscale(100%);
-  filter: grayscale(100%);
-}
 
 #shots {
   overflow: hidden;
