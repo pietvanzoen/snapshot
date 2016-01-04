@@ -5,7 +5,7 @@ requirejs.config({
     net: 'libs/net',
     lodash: "libs/lodash",
     io: '/socket.io/socket.io.js',
-    simplewebrtc: 'http://simplewebrtc.com/latest',
+    simplewebrtc: '//simplewebrtc.com/latest'
   },
   waitSeconds: 30
 });
